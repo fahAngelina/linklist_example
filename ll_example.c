@@ -114,8 +114,6 @@ void insert( LLPtr *sPtr, int value )//สร้างnodeใหม่ เกบ
          newPtr->nextPtr = *sPtr;
          if(currentPtr!=NULL)//ป้องกันแรกแรกสุด 
            currentPtr->pPtr = newPtr; 
-        
-         newPtr->pPtr = NULL;
          *sPtr = newPtr;
         
       } // end if
