@@ -41,6 +41,7 @@ int main( void )
             scanf( "%d", &item );
             insert( &startPtr, item ); // insert item in list
             printList( startPtr );
+            reverseList( startPtr );
             break;
          case 2: // delete an element
             // if list is not empty
@@ -52,6 +53,7 @@ int main( void )
                if ( deletes( &startPtr, item ) ) { // remove item
                   printf( "%d deleted.\n", item );
                   printList( startPtr );
+                  reverseList( startPtr );
                } // end if
                else {
                   printf( "%d not found.\n\n", item );
@@ -85,7 +87,7 @@ void instructions( void )
 } // end function instructions
 
 // insert a new value into the list in sorted order
-void insert( LLPtr *sPtr, int value )
+void insert( LLPtr *sPtr, int value )//สร้างnodeใหม่ เกบค่า ละเชื่อม
 { 
    LLPtr newPtr; // pointer to new node
    LLPtr previousPtr; // pointer to previous node in list
@@ -96,13 +98,13 @@ void insert( LLPtr *sPtr, int value )
    if ( newPtr != NULL ) { // is space available
       newPtr->data = value; // place value in node
       newPtr->nextPtr = NULL; // node does not link to another node
-    
+      newPtr->pPtr =NULL;//ชี้กลับ
        
       previousPtr = NULL;
       currentPtr = *sPtr;
 
       // loop to find the correct location in the list       
-      while ( currentPtr != NULL && value > currentPtr->data ) {
+      while ( currentPtr != NULL && value > currentPtr->data ) {//หาตน ที่จะใส่
          previousPtr = currentPtr; // walk to ...               
          currentPtr = currentPtr->nextPtr; // ... next node 
       } // end while                                         
@@ -110,17 +112,21 @@ void insert( LLPtr *sPtr, int value )
       // insert new node at beginning of list
       if ( previousPtr == NULL ) { 
          newPtr->nextPtr = *sPtr;
-      
+         if(currentPtr!=NULL)//ป้องกันแรกแรกสุด 
+           currentPtr->pPtr = newPtr; 
+        
+         newPtr->pPtr = NULL;
          *sPtr = newPtr;
         
       } // end if
       else { // insert new node between previousPtr and currentPtr
          previousPtr->nextPtr = newPtr;
-   
+         newPtr->pPtr=previousPtr;
           
          newPtr->nextPtr = currentPtr;
- 
-         
+         if(currentPtr!=NULL)//เอาไว้กันมันไหลไปNULL มีปห เวลาแทรกตัวสุดท้าย
+           currentPtr->pPtr=newPtr;
+    
       } // end else
    } // end if
    else {
@@ -203,10 +209,10 @@ void reverseList( LLPtr currentPtr )
      
       // while not the end of the list
       while ( currentPtr->pPtr!= NULL ) {
-         printf( "%d --> ", currentPtr->data );
+         printf( "%d <-- ", currentPtr->data );
          currentPtr = currentPtr->pPtr;   
       } // end while
 
-      printf( "%d --> NULL\n",currentPtr->data );    
+      printf( "%d <-- NULL\n",currentPtr->data );    
    } // end else
 }
