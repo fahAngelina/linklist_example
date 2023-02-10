@@ -140,9 +140,11 @@ int deletes( LLPtr *sPtr, int value )
    LLPtr tempPtr; // temporary node pointer
 
    // delete first node
-   if ( value == ( *sPtr )->data ) { 
+   if ( value == ( *sPtr )->data ) { //ชี้ที่ตัวแรกอยู่
       tempPtr = *sPtr; // hold onto node being removed
       *sPtr = ( *sPtr )->nextPtr; // de-thread the node
+      if(*sPtr) //ป้องกันตอนลบหมดแล้ว
+        (*sPtr)->pPtr=NULL;
       free( tempPtr ); // free the de-threaded node
       return value;
    } // end if
@@ -160,6 +162,12 @@ int deletes( LLPtr *sPtr, int value )
       if ( currentPtr != NULL ) { 
          tempPtr = currentPtr;
          previousPtr->nextPtr = currentPtr->nextPtr;
+         if(currentPtr->nextPtr!=NULL)
+         {
+           currentPtr=currentPtr->nextPtr;
+           currentPtr->pPtr=previousPtr;
+         }
+        //currentPtr->nextPtr->pPtr=previousPtr;
          free( tempPtr );
          return value;
       } // end if
@@ -207,10 +215,10 @@ void reverseList( LLPtr currentPtr )
      
       // while not the end of the list
       while ( currentPtr->pPtr!= NULL ) {
-         printf( "%d <-- ", currentPtr->data );
+         printf( "%d --> ", currentPtr->data );
          currentPtr = currentPtr->pPtr;   
       } // end while
 
-      printf( "%d <-- NULL\n",currentPtr->data );    
+      printf( "%d --> NULL\n",currentPtr->data );    
    } // end else
 }
